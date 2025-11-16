@@ -19,7 +19,7 @@ const emailConfig = {
   socketTimeout: 30000,
 };
 
-// Create transporter with better configuration - FIXED: createTransport instead of createTransporter
+// Create transporter with better configuration
 const transporter = nodemailer.createTransport(emailConfig);
 
 // Verify transporter configuration with retry
@@ -70,7 +70,6 @@ const emailTemplates = {
         .footer { background: #f8f9fa; padding: 25px 30px; text-align: center; color: #6c757d; font-size: 14px; border-top: 1px solid #e9ecef; }
         .warning { color: #dc3545; font-size: 12px; margin-top: 10px; }
         .support { margin-top: 15px; color: #495057; }
-        .button { display: inline-block; padding: 12px 30px; background: #1890ff; color: white; text-decoration: none; border-radius: 6px; margin: 15px 0; }
         @media (max-width: 600px) {
             .container { margin: 10px; }
             .header { padding: 30px 20px; }
@@ -104,6 +103,76 @@ const emailTemplates = {
             <p>&copy; 2024 ExamVerified. All rights reserved.</p>
             <p class="warning">⚠️ For your security, never share this code with anyone.</p>
             <p class="support">Need help? Contact our support team at <a href="mailto:support@examverified.com">support@examverified.com</a></p>
+        </div>
+    </div>
+</body>
+</html>
+    `
+  },
+  
+  profileUpdate: {
+    subject: 'Verify Your Updated Email - ExamVerified',
+    generateHTML: (data) => `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - Profile Update</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background: #f6f9fc; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .header { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); padding: 40px 30px; text-align: center; color: white; }
+        .header h1 { font-size: 28px; font-weight: 600; margin-bottom: 10px; }
+        .header p { font-size: 16px; opacity: 0.9; }
+        .content { padding: 40px 30px; }
+        .greeting { font-size: 18px; margin-bottom: 20px; color: #444; }
+        .otp-container { background: #fff5f5; border: 2px dashed #ff6b6b; border-radius: 8px; padding: 25px; text-align: center; margin: 30px 0; }
+        .otp-code { font-size: 42px; font-weight: bold; color: #c44569; letter-spacing: 8px; font-family: 'Courier New', monospace; }
+        .instructions { background: #ffeaa7; border-left: 4px solid #fdcb6e; padding: 15px; margin: 20px 0; border-radius: 4px; }
+        .security-note { background: #d1ecf1; border-left: 4px solid #17a2b8; padding: 15px; margin: 20px 0; border-radius: 4px; }
+        .footer { background: #f8f9fa; padding: 25px 30px; text-align: center; color: #6c757d; font-size: 14px; border-top: 1px solid #e9ecef; }
+        .warning { color: #dc3545; font-size: 12px; margin-top: 10px; }
+        .support { margin-top: 15px; color: #495057; }
+        @media (max-width: 600px) {
+            .container { margin: 10px; }
+            .header { padding: 30px 20px; }
+            .content { padding: 30px 20px; }
+            .otp-code { font-size: 32px; letter-spacing: 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📧 Email Updated</h1>
+            <p>Verify your new email address</p>
+        </div>
+        <div class="content">
+            <p class="greeting">Hello <strong>${data.name}</strong>,</p>
+            <p>You've successfully updated your email address in ExamVerified. To complete this change and verify your new email, please use the verification code below:</p>
+            
+            <div class="otp-container">
+                <div class="otp-code">${data.otp}</div>
+            </div>
+            
+            <div class="instructions">
+                <strong>🚀 Action Required:</strong>
+                <p>Enter this code in your profile settings to verify your new email address. This code will expire in <strong>1 hour</strong>.</p>
+            </div>
+            
+            <div class="security-note">
+                <strong>🔒 Security Notice:</strong>
+                <p>If you didn't request this email change, please contact our support team immediately to secure your account.</p>
+            </div>
+            
+            <p>Once verified, all future communications will be sent to this email address.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 ExamVerified. All rights reserved.</p>
+            <p class="warning">⚠️ Never share this code with anyone. ExamVerified will never ask for your verification codes.</p>
+            <p class="support">Questions? Contact <a href="mailto:support@examverified.com">support@examverified.com</a></p>
         </div>
     </div>
 </body>
@@ -246,6 +315,9 @@ const sendTemplatedEmail = async (templateName, email, data) => {
 // Send verification email - FIXED VERSION
 export const sendVerificationEmail = async (email, otp, name = 'User') => {
   try {
+    console.log(`📧 Sending verification email to: ${email}`);
+    console.log(`🔐 OTP: ${otp}, Name: ${name}`);
+
     await sendTemplatedEmail('verification', email, {
       name: name,
       otp: otp,
@@ -253,7 +325,7 @@ export const sendVerificationEmail = async (email, otp, name = 'User') => {
       supportEmail: process.env.SUPPORT_EMAIL || 'support@examverified.com'
     });
     
-    console.log(`📧 Verification email sent to: ${email}, OTP: ${otp}`);
+    console.log(`✅ Verification email sent successfully to: ${email}`);
     return true;
   } catch (error) {
     console.error('❌ Error sending verification email:', {
@@ -265,9 +337,37 @@ export const sendVerificationEmail = async (email, otp, name = 'User') => {
   }
 };
 
-// Send password reset email - FIXED VERSION
+// Send profile update verification email - NEW FUNCTION
+export const sendProfileUpdateEmail = async (email, otp, name = 'User') => {
+  try {
+    console.log(`📧 Sending profile update verification email to: ${email}`);
+    console.log(`🔐 OTP: ${otp}, Name: ${name}`);
+
+    await sendTemplatedEmail('profileUpdate', email, {
+      name: name,
+      otp: otp,
+      expiryTime: '1 hour',
+      supportEmail: process.env.SUPPORT_EMAIL || 'support@examverified.com'
+    });
+    
+    console.log(`✅ Profile update verification email sent successfully to: ${email}`);
+    return true;
+  } catch (error) {
+    console.error('❌ Error sending profile update verification email:', {
+      error: error.message,
+      email: email,
+      timestamp: new Date().toISOString()
+    });
+    return false;
+  }
+};
+
+// Send password reset email
 export const sendPasswordResetEmail = async (email, otp, name = 'User') => {
   try {
+    console.log(`📧 Sending password reset email to: ${email}`);
+    console.log(`🔐 OTP: ${otp}, Name: ${name}`);
+
     await sendTemplatedEmail('passwordReset', email, {
       name: name,
       otp: otp,
@@ -275,7 +375,7 @@ export const sendPasswordResetEmail = async (email, otp, name = 'User') => {
       supportEmail: process.env.SUPPORT_EMAIL || 'support@examverified.com'
     });
     
-    console.log(`📧 Password reset email sent to: ${email}, OTP: ${otp}`);
+    console.log(`✅ Password reset email sent successfully to: ${email}`);
     return true;
   } catch (error) {
     console.error('❌ Error sending password reset email:', {

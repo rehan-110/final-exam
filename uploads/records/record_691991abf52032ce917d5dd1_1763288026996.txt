@@ -1,0 +1,45 @@
+PATIENT MEDICAL RECORD
+======================
+
+Patient Information:
+-------------------
+Name: John Smith
+Date of Birth: 1985-03-15
+Patient ID: P-123456
+Contact: john.smith@email.com | (555) 123-4567
+
+Medical History:
+---------------
+- Allergies: Penicillin, Shellfish
+- Chronic Conditions: None
+- Previous Surgeries: Appendectomy (2015)
+- Current Medications: Multivitamin, Vitamin D
+
+Recent Visit Summary:
+-------------------
+Date: 16/11/2025
+Physician: Dr. Sarah Johnson
+Reason for Visit: Annual checkup
+
+Vital Signs:
+-----------
+Blood Pressure: 120/80 mmHg
+Heart Rate: 72 bpm
+Temperature: 98.6°F (37°C)
+Respiratory Rate: 16 breaths/min
+Oxygen Saturation: 98%
+
+Assessment & Plan:
+----------------
+1. Overall health: Excellent
+2. Continue current lifestyle and diet
+3. Follow up in 1 year for next annual checkup
+4. Recommended: Continue regular exercise
+
+Physician Signature:
+------------------
+Dr. Sarah Johnson, MD
+Board Certified Internal Medicine
+
+Date Generated: 16/11/2025
+This is a sample medical record for testing purposes.

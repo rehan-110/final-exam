@@ -5,7 +5,7 @@ import rateLimit from 'express-rate-limit';
 // Rate limit for password reset OTP
 export const passwordResetLimiter = rateLimit({
   windowMs: 2 * 60 * 1000, // 2 minutes
-  max: 1, // 1 request per 2 minutes
+  max: 15, // 16 request per 2 minutes
   message: {
     success: false,
     message: 'Too many password reset attempts. Please try again in 2 minutes.'

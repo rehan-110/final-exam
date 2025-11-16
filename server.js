@@ -6,7 +6,14 @@ import authRoutes from './routes/authRoutes.js';
 import appRoutes from './routes/appRoutes.js';
 import { globalLimiter } from './middleware/rateLimitMiddleware.js';
 import mongoose from 'mongoose';
+import appointmentRoutes from './routes/appointmentRoutes.js';
+import profileRoutes from './routes/profileRoutes.js';
+import recordRoutes from './routes/recordRoutes.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // Load environment variables
 dotenv.config({ debug: false });
 
@@ -36,14 +43,16 @@ app.use((req, res, next) => {
   next();
 });
 
-// Body Parsing Middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+app.use(express.json({ limit: '15mb' })); // Increased for base64 files
+app.use(express.urlencoded({ extended: true, limit: '15mb' }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api', appRoutes);
-
+app.use('/api/appointments', appointmentRoutes);
+app.use('/api/user', profileRoutes); 
+app.use('/api', recordRoutes);
 // Health Check Route
 app.get('/api/health', (req, res) => {
   const dbStatus = mongoose.connection.readyState;
